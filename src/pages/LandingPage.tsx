@@ -12,10 +12,10 @@ import {
   required,
   useInput,
 } from "react-admin";
-import { ChromePicker } from "react-color";
 // import { fileUpload } from "./common/fileUpload";
 import axios from "axios";
-import { API_DOMAIN, API_FORM_URL } from "../common/envs";
+import { ChromePicker } from "react-color";
+import { customAuthProvider } from "../App";
 
 const ColorInput = (props) => {
   const [showPicker, setShowPicker] = useState(false);
@@ -59,14 +59,15 @@ const ColorInput = (props) => {
 };
 
 export const fileUpload = async (file) => {
+  const token = await customAuthProvider.getJWTToken();
   const reponse = await axios.post(
     // `https://letit-api.bosctechlab.com/rest/image-upload/admin/images/${file.name}`,
     // `http://3.105.151.177:8083/rest/image-upload/admin/adminPanel/${file.name}`,
-    `${API_DOMAIN}/rest/image-upload/admin/adminPanel/${file.name}`,
+    `https://backend.trucknearthsales.com.au/rest/image-upload/profile/${file.name}`,
     null,
     {
       headers: {
-        // Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     }
   );
@@ -99,7 +100,7 @@ const validateAppStoreUrl = (value) => {
   return undefined; // No validation error
 };
 
-const LandingPage = (props) => {
+const LandingPage = (props: any) => {
   const [tab, setTab] = React.useState(0);
 
   const handleTabChange = (event, newValue) => {
@@ -144,17 +145,15 @@ const LandingPage = (props) => {
 
       // Create an array with a single object and send it as JSON
       const dataArray = [postData];
-      const response = await fetch(API_FORM_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: [JSON.stringify(dataArray)],
-      });
 
-      if (response.ok) {
+      const response = await axios.post(
+        "https://trucknearthsales.com.au/api/saveData",
+        dataArray
+      );
+
+      if (response.status == 200) {
         // Request was successful
-        const responseData = await response.json();
+        const responseData = await response.data;
         alert("Data Uploaded successfully");
         // notify(`Data Uploaded successfully`, { type: "success" });
       } else {
@@ -170,7 +169,7 @@ const LandingPage = (props) => {
   return (
     <div>
       <Create {...props}>
-        <SimpleForm defaultValues={props.data[0]} onSubmit={handleFormSubmit}>
+        <SimpleForm defaultValues={props} onSubmit={handleFormSubmit}>
           <Paper elevation={3} style={{ padding: "16px", width: "100%" }}>
             <Tabs value={tab} onChange={handleTabChange} centered>
               <Tab label="Logos" />

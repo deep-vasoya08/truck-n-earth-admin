@@ -26,6 +26,12 @@ export const customProvider = (auth) => ({
       url = `${BASE_URL}/category/sub-category/${params.filter.id}`;
     }
 
+    if (resource === "landing-page") {
+      console.log("landing-page");
+
+      url = "https://trucknearthsales.com.au/api/getData";
+    }
+
     const resp = await http(url, {
       headers: new Headers({
         Authorization: `Bearer ${token}`,

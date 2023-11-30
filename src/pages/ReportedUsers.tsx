@@ -7,21 +7,21 @@ import {
 
 export const ReportedUsers = () => {
   return (
-    <List disableSyncWithLocation>
+    <List resource="report" disableSyncWithLocation>
       <DatagridConfigurable bulkActionButtons={false}>
-        <FunctionField
-          render={(rec) => {
-            return rec.reporter.firstName + " " + rec.reporter.lastName;
-          }}
-          sortable={false}
-          label="Reporter"
-        />
         <FunctionField
           render={(rec) => {
             return rec.reported.firstName + " " + rec.reported.lastName;
           }}
           sortable={false}
-          label="Reported"
+          label="Reported User"
+        />
+        <FunctionField
+          render={(rec) => {
+            return rec.reporter.firstName + " " + rec.reporter.lastName;
+          }}
+          sortable={false}
+          label="Reported By"
         />
         <FunctionField
           render={(rec) => {
@@ -30,7 +30,7 @@ export const ReportedUsers = () => {
           sortable={false}
           label="Reason"
         />
-        <DateField sortable={false} label="Report time" source="reportedAt" />
+        <DateField sortable={false} label="Reported On" source="reportedAt" />
       </DatagridConfigurable>
     </List>
   );
