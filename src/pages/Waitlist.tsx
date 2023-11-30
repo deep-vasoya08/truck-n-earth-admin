@@ -35,7 +35,7 @@ export const Waitlist = () => (
     actions={<WaitListActions />}
     filters={waituserListFilters}
   >
-    <DatagridConfigurable>
+    <DatagridConfigurable bulkActionButtons={false}>
       <TextField source="email" width="90%" />
       {/* <SendMail label="Action" /> */}
     </DatagridConfigurable>
