@@ -204,7 +204,7 @@ const LandingPage = (props: any) => {
                     source="logoText"
                     label="Logo Text"
                     fullWidth
-                    validate={required()}
+                    // validate={required()}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -212,7 +212,7 @@ const LandingPage = (props: any) => {
                     source="playstoreLink"
                     label="PlayStore Link"
                     fullWidth
-                    validate={[required(), validatePlayStoreUrl]}
+                    // validate={[required(), validatePlayStoreUrl]}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -220,7 +220,7 @@ const LandingPage = (props: any) => {
                     source="appstoreLink"
                     label="AppStore Link"
                     fullWidth
-                    validate={[required(), validateAppStoreUrl]}
+                    // validate={[required(), validateAppStoreUrl]}
                   />
                 </Grid>
               </Grid>
@@ -236,13 +236,13 @@ const LandingPage = (props: any) => {
                 source="heading"
                 label="Heading"
                 fullWidth
-                validate={required()}
+                // validate={required()}
               />
               <TextInput
                 source="subHeading"
                 label="Subheading"
                 fullWidth
-                validate={required()}
+                // validate={required()}
               />
               <ImageInput
                 source="dashboardImg"
@@ -281,14 +281,14 @@ const LandingPage = (props: any) => {
                     source="heading"
                     label="Feature Title"
                     fullWidth
-                    validate={validateRequired}
+                    // validate={validateRequired}
                   />
                   <TextInput
                     multiline
                     source="desc"
                     label="Feature Description"
                     fullWidth
-                    validate={validateRequired}
+                    // validate={validateRequired}
                   />
                 </SimpleFormIterator>
               </ArrayInput>
@@ -303,7 +303,7 @@ const LandingPage = (props: any) => {
               <ArrayInput
                 source="testomonial"
                 label="Testimonials"
-                validate={validateRequired}
+                // validate={validateRequired}
               >
                 <SimpleFormIterator fullWidth>
                   <h1>Testimonials</h1>
@@ -320,14 +320,14 @@ const LandingPage = (props: any) => {
                     source="name"
                     label="Testimonial Name"
                     fullWidth
-                    validate={validateRequired}
+                    // validate={validateRequired}
                   />
                   <TextInput
                     multiline
                     source="desc"
                     label="Testimonials Description"
                     fullWidth
-                    validate={validateRequired}
+                    // validate={validateRequired}
                   />
                 </SimpleFormIterator>
               </ArrayInput>
@@ -352,14 +352,14 @@ const LandingPage = (props: any) => {
                     source="que"
                     label="Question"
                     fullWidth
-                    validate={validateRequired}
+                    // validate={validateRequired}
                   />
                   <TextInput
                     multiline
                     source="ans"
                     label="Answer"
                     fullWidth
-                    validate={validateRequired}
+                    // validate={validateRequired}
                   />
                 </SimpleFormIterator>
               </ArrayInput>

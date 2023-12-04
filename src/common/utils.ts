@@ -32,6 +32,10 @@ export const customProvider = (auth) => ({
       url = "https://trucknearthsales.com.au/api/getData";
     }
 
+    if (resource === "item") {
+      url = `${BASE_URL}/admin/list/items`;
+    }
+
     const resp = await http(url, {
       headers: new Headers({
         Authorization: `Bearer ${token}`,
