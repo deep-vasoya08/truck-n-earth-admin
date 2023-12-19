@@ -27,12 +27,10 @@ export const customProvider = (auth) => ({
     }
 
     if (resource === "landing-page") {
-      console.log("landing-page");
-
       url = "https://trucknearthsales.com.au/api/getData";
     }
 
-    if (resource === "item") {
+    if (resource === "listing") {
       url = `${BASE_URL}/admin/list/items`;
     }
 
@@ -53,9 +51,15 @@ export const customProvider = (auth) => ({
   },
 
   getOne: async (resource: string, params: GetOneParams) => {
-    const url = `${BASE_URL}/${resource}/${params.id}`;
+    let url = `${BASE_URL}/${resource}/${params.id}`;
 
-    console.log(resource);
+    if (resource === "listing") {
+      url = `${BASE_URL}/item/${params.id}`;
+    }
+
+    if (resource === "purchase") {
+      url = `${BASE_URL}/purchase/id/${params.id}`;
+    }
 
     const token = await auth.getJWTToken();
 
@@ -78,6 +82,10 @@ export const customProvider = (auth) => ({
 
     if (!params.data) {
       throw new Error("No data provided");
+    }
+
+    if (resource === "listing") {
+      url = `${BASE_URL}/item`;
     }
 
     let body = { categoryName: params.data.categoryName, categoryId: "" };

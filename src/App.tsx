@@ -1,5 +1,4 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import CategoryIcon from "@mui/icons-material/Category";
 import FireTruckIcon from "@mui/icons-material/FireTruck";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import ReportIcon from "@mui/icons-material/Report";
@@ -11,12 +10,11 @@ import { Admin, Resource } from "react-admin";
 import { FirebaseAuthProvider } from "react-admin-firebase";
 import { customProvider } from "./common/utils";
 import { firebaseConfig } from "./constants/firebaseConfig";
-import { Category, CreateCategory, ShowCategory } from "./pages/Category";
-import { Item } from "./pages/Item";
+import { Product, ShowProduct } from "./pages/Item";
 import LandingPage from "./pages/LandingPage";
-import { PurchaseHistory } from "./pages/PurchaseHistory";
+import { PurchaseHistory, ShowPurchaseHistory } from "./pages/PurchaseHistory";
 import { ReportedUsers } from "./pages/ReportedUsers";
-import { User } from "./pages/User";
+import { ShowUser, User } from "./pages/User";
 import { Waitlist } from "./pages/Waitlist";
 import { LoginPage } from "./pages/auth/Login";
 
@@ -52,23 +50,26 @@ export const App = () => {
       <Resource
         name="user"
         list={User}
+        show={ShowUser}
         icon={() => <AccountCircleIcon style={{ color: "#2196f3" }} />}
       />
-      <Resource
+      {/* <Resource
         name="category"
         list={Category}
         create={CreateCategory}
         show={ShowCategory}
         icon={() => <CategoryIcon style={{ color: "#2196f3" }} />}
-      />
+      /> */}
       <Resource
-        name="item"
-        list={Item}
+        name="listing"
+        list={Product}
+        show={ShowProduct}
         icon={() => <FireTruckIcon style={{ color: "#2196f3" }} />}
       />
       <Resource
         name="purchase"
         list={PurchaseHistory}
+        show={ShowPurchaseHistory}
         icon={() => <RestoreIcon style={{ color: "#2196f3" }} />}
       />
       <Resource

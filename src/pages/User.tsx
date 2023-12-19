@@ -7,7 +7,10 @@ import {
   DatagridConfigurable,
   FilterButton,
   List,
+  ListButton,
   SelectColumnsButton,
+  Show,
+  TabbedShowLayout,
   TextField,
   TextInput,
   TopToolbar,
@@ -37,8 +40,8 @@ export const User = () => (
     filters={userListFilters}
     sort={{ field: "createdAt", order: "DESC" }}
   >
-    <DatagridConfigurable bulkActionButtons={false}>
-      <Avatar src={"profilePhoto"} alt="User" />
+    <DatagridConfigurable bulkActionButtons={false} rowClick="show">
+      <UserAvatar label="Profile" />
       <TextField source="firstName" />
       <TextField source="lastName" />
       <TextField source="country" />
@@ -48,6 +51,24 @@ export const User = () => (
     </DatagridConfigurable>
   </List>
 );
+
+const ShowUserActions = () => (
+  <TopToolbar>
+    <ListButton />
+  </TopToolbar>
+);
+
+export const ShowUser = () => {
+  return (
+    <Show actions={<ShowUserActions />}>
+      <TabbedShowLayout>
+        <TabbedShowLayout.Tab label="asd">
+          <TextField source="name" />
+        </TabbedShowLayout.Tab>
+      </TabbedShowLayout>
+    </Show>
+  );
+};
 
 const BlockUserComponent = () => {
   const [open, setOpen] = useState(false);
@@ -84,5 +105,17 @@ const BlockUserComponent = () => {
         onClose={() => setOpen(false)}
       />
     </>
+  );
+};
+
+const UserAvatar = () => {
+  const record = useRecordContext();
+  const url = record.profilePhoto ? record.profilePhoto : undefined;
+  return (
+    <Avatar
+      src={url}
+      sx={{ width: 50, height: 50 }}
+      alt={`${record.firstName}`}
+    />
   );
 };
