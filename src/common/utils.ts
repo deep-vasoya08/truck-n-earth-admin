@@ -30,8 +30,12 @@ export const customProvider = (auth) => ({
       url = "https://trucknearthsales.com.au/api/getData";
     }
 
-    if (resource === "listing") {
-      url = `${BASE_URL}/admin/list/items`;
+    if (resource === "product") {
+      url = `${BASE_URL}/admin/list/items?${query}`;
+    }
+
+    if (resource === "contact help") {
+      url = `${BASE_URL}/contact-help?${query}`;
     }
 
     const resp = await http(url, {
@@ -53,12 +57,16 @@ export const customProvider = (auth) => ({
   getOne: async (resource: string, params: GetOneParams) => {
     let url = `${BASE_URL}/${resource}/${params.id}`;
 
-    if (resource === "listing") {
+    if (resource === "product") {
       url = `${BASE_URL}/item/${params.id}`;
     }
 
     if (resource === "purchase") {
       url = `${BASE_URL}/purchase/id/${params.id}`;
+    }
+
+    if (resource === "user") {
+      url = `${BASE_URL}/admin/user/${params.id}`;
     }
 
     const token = await auth.getJWTToken();
@@ -84,7 +92,7 @@ export const customProvider = (auth) => ({
       throw new Error("No data provided");
     }
 
-    if (resource === "listing") {
+    if (resource === "product") {
       url = `${BASE_URL}/item`;
     }
 

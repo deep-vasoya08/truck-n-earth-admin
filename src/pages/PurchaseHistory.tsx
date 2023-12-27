@@ -1,9 +1,11 @@
-import { Divider } from "@mui/material";
+import { Breadcrumbs, Divider } from "@mui/material";
+import Link from "@mui/material/Link";
 import { useState } from "react";
 import {
   Button,
   DatagridConfigurable,
   DateField,
+  ExportButton,
   FilterButton,
   FunctionField,
   List,
@@ -15,12 +17,12 @@ import {
   TextInput,
   TopToolbar,
 } from "react-admin";
-import { Link } from "react-router-dom";
 
 const HistoryListActions = () => (
   <TopToolbar>
     <SelectColumnsButton />
     <FilterButton />
+    <ExportButton />
   </TopToolbar>
 );
 
@@ -89,6 +91,10 @@ export const ShowPurchaseHistory = () => {
 
   return (
     <Show actions={<ShowHistoryActions />}>
+      <Breadcrumbs>
+        <Link href="/#/user">Home</Link>
+        <Link href="/#/purchase">Purchases</Link>
+      </Breadcrumbs>
       <TabbedShowLayout divider={<Divider flexItem />}>
         <TabbedShowLayout.Tab label="Summary">
           <FunctionField
@@ -101,72 +107,65 @@ export const ShowPurchaseHistory = () => {
           <TextField source="item.itemName" label="Item name" />
           <FunctionField
             render={(rec) => "$" + rec.item.askingPrice}
-            label="Item price"
+            label="Listing price"
           />
-          <DateField
-            source="purchaseDate"
-            label="PurchasedAt"
-            options={{
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            }}
-          />
+          <DateField source="purchaseDate" label="Purchased On" />
+          <DateField source="item.createdAt" label="Listed On" />
+          <TextField source="item.delivery" label="Delivery" />
           <Button>
             <Link
               style={{ textDecoration: "none" }}
-              to={`/listing/${itemId}/show`}
+              to={`/product/${itemId}/show`}
             >
               Go to Listing
             </Link>
           </Button>
         </TabbedShowLayout.Tab>
         <TabbedShowLayout.Tab label="Seller Details">
-          <FunctionField
-            render={(rec) => {
-              setSellerId(rec.seller.id);
-              return rec.seller.id;
-            }}
-            label="id"
-          />
           <TextField source="seller.firstName" label="First Name" />
           <TextField source="seller.lastName" label="Last Name" />
           <FunctionField
             render={(rec) => {
+              setSellerId(rec.seller.id);
               return rec.seller.email ? rec.seller.email : "-";
             }}
             label="Email"
           />
+          <FunctionField
+            render={(rec) => {
+              return rec.seller.mobile ? rec.seller.mobile : "-";
+            }}
+            label="Mobile"
+          />
           <Button>
             <Link
               style={{ textDecoration: "none" }}
-              to={`/user/${buyerId}/show`}
+              to={`/user/${sellerId}/show`}
             >
               Go to profile
             </Link>
           </Button>
         </TabbedShowLayout.Tab>
         <TabbedShowLayout.Tab label="Buyer Details">
-          <FunctionField
-            render={(rec) => {
-              setBuyerId(rec.buyer.id);
-              return rec.buyer.id;
-            }}
-            label="id"
-          />
           <TextField source="buyer.firstName" label="First Name" />
           <TextField source="buyer.lastName" label="Last Name" />
           <FunctionField
             render={(rec) => {
+              setBuyerId(rec.buyer.id);
               return rec.buyer.email ? rec.buyer.email : "-";
             }}
             label="Email"
           />
+          <FunctionField
+            render={(rec) => {
+              return rec.seller.mobile ? rec.seller.mobile : "-";
+            }}
+            label="Mobile"
+          />
           <Button>
             <Link
               style={{ textDecoration: "none" }}
-              to={`/user/${sellerId}/show`}
+              to={`/user/${buyerId}/show`}
             >
               Go to profile
             </Link>

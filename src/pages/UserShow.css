@@ -1,0 +1,70 @@
+/* Default styles for larger screens */
+.user-profile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.userImage {
+  height: 150px;
+  width: 150px;
+}
+
+.user-profile-right {
+  margin-left: 10%;
+  margin-right: 50%;
+}
+
+.userImageProfile {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+}
+
+.user-section {
+  margin-bottom: 20px;
+}
+
+.user-section h2 {
+  margin-bottom: 10px;
+}
+
+.user-profile-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.user-profile-field label {
+  min-width: 120px;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.user-profile-field .ra-field {
+  flex-grow: 1;
+}
+
+/* Adjust styles for smaller screens using media queries */
+@media (max-width: 768px) {
+  .user-profile {
+    flex-direction: column;
+  }
+
+  .user-profile-right {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 20px;
+    /* text-align: center; */
+  }
+
+  .user-profile-field {
+    margin-right: 0;
+    justify-content: flex-start;
+  }
+
+  .user-section {
+    margin-left: 0;
+  }
+}

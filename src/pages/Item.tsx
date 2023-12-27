@@ -1,128 +1,70 @@
 import {
   Avatar,
+  Breadcrumbs,
   Dialog,
   DialogContent,
   Divider,
   ImageList,
   Typography,
 } from "@mui/material";
+import Link from "@mui/material/Link";
 import { useState } from "react";
 import {
   Button,
   Datagrid,
+  DateField,
+  ExportButton,
   FilterButton,
   FunctionField,
   List,
   ListButton,
   RichTextField,
-  SelectColumnsButton,
   Show,
-  ShowButton,
   TabbedShowLayout,
   TextField,
   TextInput,
   TopToolbar,
   useRecordContext,
 } from "react-admin";
-import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Link } from "react-router-dom";
+import { Link as LinkDOM } from "react-router-dom";
 
 const ItemListActions = () => (
   <TopToolbar>
-    <SelectColumnsButton />
     <FilterButton />
+    <ExportButton />
   </TopToolbar>
 );
 
 const itemListFilters = [
-  <TextInput
-    key="user-filter-firstName"
-    label="Global Search"
-    source="globalSearch"
-  />,
+  <TextInput key="item-filter" label="Global Search" source="globalSearch" />,
 ];
 
 export const Product = () => {
-  const [selectedRecord, setSelectedRecord] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = (record) => {
-    setSelectedRecord(record);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setSelectedRecord(null);
-    setIsModalOpen(false);
-  };
-
   return (
-    <>
-      <List
-        disableSyncWithLocation
-        actions={<ItemListActions />}
-        filters={itemListFilters}
-        sort={{ field: "createdAt", order: "DESC" }}
-      >
-        <Datagrid bulkActionButtons={false} rowClick="show">
-          <FunctionField
-            render={(rec) => {
-              return "#" + rec.id;
-            }}
-            label="Id"
-          />
-          <TextField source="itemName" label="Name" />
-          <TextField
-            source="itemDescription"
-            label="Description"
-            sortable={false}
-            style={{ wordWrap: "anywhere", width: "150px", textWrap: "pretty" }}
-          />
-          <TextField source="location" label="Address" sortable={false} />
-          <TextField source="askingPrice" label="Asking Price" />
-          <FunctionField
-            render={(rec) => {
-              return rec.isSold ? "Yes" : "No";
-            }}
-            label="Sold"
-          />
-          <FunctionField
-            render={(rec) => {
-              return rec.user.firstName + " " + rec.user.lastName;
-            }}
-            label="Owner"
-          />
-          <FunctionField
-            render={(rec) => (
-              <ShowButton label="Show Images" onClick={(e) => openModal(rec)} />
-            )}
-            label="Images"
-          />
-        </Datagrid>
-      </List>
-      <Dialog fullWidth open={isModalOpen} onClose={closeModal}>
-        {selectedRecord && selectedRecord.images && (
-          <Carousel
-            autoPlay={true}
-            showArrows={true}
-            showThumbs={false}
-            swipeable={true}
-            dynamicHeight={true}
-          >
-            {selectedRecord.images.map((img) => (
-              <div key={img.id}>
-                <img
-                  style={{ height: "80vh", objectFit: "fill" }}
-                  src={img.image_url}
-                  alt="image"
-                />
-              </div>
-            ))}
-          </Carousel>
-        )}
-      </Dialog>
-    </>
+    <List
+      disableSyncWithLocation
+      actions={<ItemListActions />}
+      filters={itemListFilters}
+      sort={{ field: "createdAt", order: "DESC" }}
+    >
+      <Datagrid bulkActionButtons={false} rowClick="show">
+        <FunctionField
+          render={(rec) => {
+            return "#" + rec.id;
+          }}
+          label="Id"
+          sortBy="id"
+          sortable={true}
+        />
+        <TextField source="itemName" label="Name" />
+        <DateField source="createdAt" label="Listed On" sortable={false} />
+        <FunctionField
+          render={(rec) => "$" + rec.askingPrice}
+          label="Listing Price"
+        />
+      </Datagrid>
+    </List>
   );
 };
 
@@ -136,6 +78,10 @@ export const ShowProduct = () => {
   const [userId, setUserId] = useState(null);
   return (
     <Show actions={<ShowProductActions />}>
+      <Breadcrumbs>
+        <Link href="/#/user">Home</Link>
+        <Link href="/#/product">Products</Link>
+      </Breadcrumbs>
       <TabbedShowLayout divider={<Divider flexItem />}>
         <TabbedShowLayout.Tab label="summary">
           <FunctionField
@@ -146,7 +92,8 @@ export const ShowProduct = () => {
           />
           <TextField source="itemName" label="Name" />
           <TextField source="location" label="Address" sortable={false} />
-          <TextField source="askingPrice" label="Asking Price" />
+          <TextField source="askingPrice" label="Listing Price" />
+          <DateField source="createdAt" label="Listed On" sortable={false} />
           <FunctionField
             render={(rec) => {
               return rec.isSold ? "Yes" : "No";
@@ -159,7 +106,7 @@ export const ShowProduct = () => {
             sortable={false}
             style={{
               wordWrap: "anywhere",
-              width: "150px",
+              width: "fit-content",
               textWrap: "pretty",
             }}
           />
@@ -171,7 +118,7 @@ export const ShowProduct = () => {
           />
         </TabbedShowLayout.Tab>
         <TabbedShowLayout.Tab label="Details">
-          <Typography variant="h4">Listing Details</Typography>
+          <Typography variant="h4">General Information</Typography>
           <TextField source="make" />
           <TextField source="model" />
           <TextField source="makeYear" />
@@ -181,15 +128,63 @@ export const ShowProduct = () => {
             }}
             label="Price"
           />
-          <TextField source="GCM" label="GCM" />
-          <TextField source="GVM" label="GVM" />
-          <TextField source="VIN" label="VIN" />
-          <TextField source="enginePower" />
+          <FunctionField
+            render={(rec) => (rec.GCM ? rec.GCM : "-")}
+            label="GCM"
+          />
+          <FunctionField
+            render={(rec) => (rec.GVM ? rec.GVM : "-")}
+            label="GVM"
+          />
+          <FunctionField
+            render={(rec) => (rec.VIN ? rec.VIN : "-")}
+            label="VIN"
+          />
           <FunctionField
             render={(rec) => {
               return rec.odometer ? rec.odometer + " KM" : "-";
             }}
             label="Odometer"
+          />
+          <FunctionField
+            render={(rec) => {
+              return rec.GVM ? rec.GVM : "-";
+            }}
+            label="GVM"
+          />
+          <FunctionField
+            render={(rec) => {
+              return rec.GCM ? rec.GCM : "-";
+            }}
+            label="GCM"
+          />
+          <FunctionField
+            render={(rec) => {
+              return rec.registered
+                ? rec.registered == "null" || rec.registered == false
+                  ? "No"
+                  : "Yes"
+                : "-";
+            }}
+            label="Registerd"
+          />
+          <FunctionField
+            render={(rec) => {
+              return rec.registrationExpires ? rec.registrationExpires : "-";
+            }}
+            label="Registration Expires"
+          />
+          <FunctionField
+            render={(rec) => {
+              return rec.registrationExpires ? rec.registrationExpires : "-";
+            }}
+            label="Registration Number"
+          />
+          <FunctionField
+            render={(rec) => {
+              return rec.delivery ? rec.delivery : "-";
+            }}
+            label="Delivery Type"
           />
           <Typography variant="h4">Engine Details</Typography>
           <FunctionField
@@ -198,11 +193,34 @@ export const ShowProduct = () => {
             }}
             label="Horse Power"
           />
-          <TextField source="transmission" />
-          <TextField source="cylinders" />
-          <TextField source="drive" />
-          <TextField source="suspension" />
-          <TextField source="engineSize" />
+          <FunctionField
+            render={(rec) => (rec.enginePower ? rec.enginePower : "-")}
+            label="Engine Power"
+          />
+          <FunctionField
+            render={(rec) => (rec.fuelType ? rec.fuelType : "-")}
+            label="Fuel Type"
+          />
+          <FunctionField
+            render={(rec) => (rec.transmission ? rec.transmission : "-")}
+            label="Transmission"
+          />
+          <FunctionField
+            render={(rec) => (rec.cylinders ? rec.cylinders : "-")}
+            label="Cylinders"
+          />
+          <FunctionField
+            render={(rec) => (rec.drive ? rec.drive : "-")}
+            label="Drive"
+          />
+          <FunctionField
+            render={(rec) => (rec.suspension ? rec.suspension : "-")}
+            label="Suspension"
+          />
+          <FunctionField
+            render={(rec) => (rec.engineSize ? rec.engineSize : "-")}
+            label="Engine Size"
+          />
         </TabbedShowLayout.Tab>
         <TabbedShowLayout.Tab label="images">
           <ImageViewer />
@@ -219,12 +237,12 @@ export const ShowProduct = () => {
             label="Company"
           />
           <Button>
-            <Link
+            <LinkDOM
               style={{ textDecoration: "none" }}
               to={`/user/${userId}/show`}
             >
               Go to profile
-            </Link>
+            </LinkDOM>
           </Button>
         </TabbedShowLayout.Tab>
       </TabbedShowLayout>
