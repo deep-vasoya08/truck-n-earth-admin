@@ -10,8 +10,8 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import indigo from "@mui/material/colors/indigo";
 import red from "@mui/material/colors/red";
 import { Admin, defaultTheme } from "react-admin";
-
 import { blue } from "@mui/material/colors";
+
 import { Resource } from "react-admin";
 import { FirebaseAuthProvider } from "react-admin-firebase";
 import { customProvider } from "./common/utils";
