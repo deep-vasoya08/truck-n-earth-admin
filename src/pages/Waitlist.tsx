@@ -4,9 +4,8 @@ import {
   Button,
   Confirm,
   DatagridConfigurable,
-  FilterButton,
+  ExportButton,
   List,
-  SelectColumnsButton,
   TextField,
   TextInput,
   TopToolbar,
@@ -16,8 +15,7 @@ import {
 
 const WaitListActions = () => (
   <TopToolbar>
-    <SelectColumnsButton />
-    <FilterButton />
+    <ExportButton />
   </TopToolbar>
 );
 

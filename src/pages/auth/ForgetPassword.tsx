@@ -11,6 +11,7 @@ import {
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { useState } from "react";
+import { firebaseConfig } from "../../constants/firebaseConfig";
 
 export default function ForgotPasswordButton() {
   const [open, setOpen] = useState(false);
@@ -30,6 +31,7 @@ export default function ForgotPasswordButton() {
   const handleSubmit = async () => {
     console.log("sending email to: ", email);
     try {
+      firebase.initializeApp(firebaseConfig);
       await firebase.auth().sendPasswordResetEmail(email);
       setOpen(false);
       setToastOpen(true);

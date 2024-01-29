@@ -17,6 +17,7 @@ import {
   TextInput,
   TopToolbar,
 } from "react-admin";
+import { Link as LinkDOM } from "react-router-dom";
 
 const HistoryListActions = () => (
   <TopToolbar>
@@ -45,7 +46,7 @@ export const PurchaseHistory = () => {
       <DatagridConfigurable bulkActionButtons={false} rowClick="show">
         <FunctionField
           render={(rec) => {
-            return "#" + rec.item.id;
+            return "#" + rec.item.listingNumber;
           }}
           label="Listing"
         />
@@ -72,6 +73,8 @@ export const PurchaseHistory = () => {
           source="purchaseDate"
           label="Puchased Date"
           sortBy="createdAt"
+          locales="en-GB"
+          options={{ year: "numeric", month: "short", day: "numeric" }}
         />
       </DatagridConfigurable>
     </List>
@@ -90,7 +93,7 @@ export const ShowPurchaseHistory = () => {
   const [buyerId, setBuyerId] = useState(null);
 
   return (
-    <Show actions={<ShowHistoryActions />}>
+    <Show actions={<ShowHistoryActions />} title="Purchase">
       <Breadcrumbs>
         <Link href="/#/user">Home</Link>
         <Link href="/#/purchase">Purchases</Link>
@@ -100,7 +103,7 @@ export const ShowPurchaseHistory = () => {
           <FunctionField
             render={(rec) => {
               setItemId(rec.item.id);
-              return "#" + rec.item.id;
+              return "#" + rec.item.listingNumber;
             }}
             label="Listing id"
           />
@@ -109,16 +112,35 @@ export const ShowPurchaseHistory = () => {
             render={(rec) => "$" + rec.item.askingPrice}
             label="Listing price"
           />
-          <DateField source="purchaseDate" label="Purchased On" />
-          <DateField source="item.createdAt" label="Listed On" />
-          <TextField source="item.delivery" label="Delivery" />
+          <DateField
+            source="purchaseDate"
+            label="Purchased On"
+            locales="en-GB"
+            options={{ year: "numeric", month: "short", day: "numeric" }}
+          />
+          <DateField
+            source="item.createdAt"
+            label="Listed On"
+            locales="en-GB"
+            options={{ year: "numeric", month: "short", day: "numeric" }}
+          />
+          <FunctionField
+            render={(rec) => {
+              return rec.item.delivery
+                ? rec.item.delivery == "SELLER_ORGANISED"
+                  ? "Seller Organized"
+                  : "Buyer Organized"
+                : "-";
+            }}
+            label="Delivery"
+          />
           <Button>
-            <Link
+            <LinkDOM
               style={{ textDecoration: "none" }}
               to={`/product/${itemId}/show`}
             >
               Go to Listing
-            </Link>
+            </LinkDOM>
           </Button>
         </TabbedShowLayout.Tab>
         <TabbedShowLayout.Tab label="Seller Details">
@@ -138,12 +160,12 @@ export const ShowPurchaseHistory = () => {
             label="Mobile"
           />
           <Button>
-            <Link
+            <LinkDOM
               style={{ textDecoration: "none" }}
               to={`/user/${sellerId}/show`}
             >
               Go to profile
-            </Link>
+            </LinkDOM>
           </Button>
         </TabbedShowLayout.Tab>
         <TabbedShowLayout.Tab label="Buyer Details">
@@ -163,12 +185,12 @@ export const ShowPurchaseHistory = () => {
             label="Mobile"
           />
           <Button>
-            <Link
+            <LinkDOM
               style={{ textDecoration: "none" }}
               to={`/user/${buyerId}/show`}
             >
               Go to profile
-            </Link>
+            </LinkDOM>
           </Button>
         </TabbedShowLayout.Tab>
       </TabbedShowLayout>

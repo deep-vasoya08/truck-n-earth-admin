@@ -18,7 +18,6 @@ import {
   FunctionField,
   List,
   ListButton,
-  RichTextField,
   Show,
   TabbedShowLayout,
   TextField,
@@ -51,17 +50,36 @@ export const Product = () => {
       <Datagrid bulkActionButtons={false} rowClick="show">
         <FunctionField
           render={(rec) => {
-            return "#" + rec.id;
+            return "#" + rec.listingNumber;
           }}
-          label="Id"
+          label="Listing"
           sortBy="id"
           sortable={true}
         />
         <TextField source="itemName" label="Name" />
-        <DateField source="createdAt" label="Listed On" sortable={false} />
+        <TextField source="category" label="Category" />
+        <TextField source="subCategory" label="Subcategory" />
+        <DateField
+          source="createdAt"
+          label="Listed On"
+          sortable={false}
+          locales="en-GB"
+          options={{ year: "numeric", month: "short", day: "numeric" }}
+        />
+        <DateField
+          source="expiresAt"
+          label="Expires On"
+          sortable={false}
+          locales="en-GB"
+          options={{ year: "numeric", month: "short", day: "numeric" }}
+        />
         <FunctionField
           render={(rec) => "$" + rec.askingPrice}
           label="Listing Price"
+        />
+        <FunctionField
+          render={(rec) => (rec.listingFees ? "$" + rec.listingFees : "-")}
+          label="Listing Fees"
         />
       </Datagrid>
     </List>
@@ -77,7 +95,7 @@ const ShowProductActions = () => (
 export const ShowProduct = () => {
   const [userId, setUserId] = useState(null);
   return (
-    <Show actions={<ShowProductActions />}>
+    <Show actions={<ShowProductActions />} title="Product">
       <Breadcrumbs>
         <Link href="/#/user">Home</Link>
         <Link href="/#/product">Products</Link>
@@ -86,34 +104,45 @@ export const ShowProduct = () => {
         <TabbedShowLayout.Tab label="summary">
           <FunctionField
             render={(rec) => {
-              return "#" + rec.id;
+              return "#" + rec.listingNumber;
             }}
             label="Listing"
           />
           <TextField source="itemName" label="Name" />
           <TextField source="location" label="Address" sortable={false} />
           <TextField source="askingPrice" label="Listing Price" />
-          <DateField source="createdAt" label="Listed On" sortable={false} />
+          <DateField
+            source="createdAt"
+            label="Listed On"
+            sortable={false}
+            locales="en-GB"
+            options={{ year: "numeric", month: "short", day: "numeric" }}
+          />
+          <DateField
+            source="expiresAt"
+            label="Expires On"
+            sortable={false}
+            locales="en-GB"
+            options={{ year: "numeric", month: "short", day: "numeric" }}
+          />
           <FunctionField
             render={(rec) => {
               return rec.isSold ? "Yes" : "No";
             }}
             label="Sold"
           />
-          <RichTextField
-            source="itemDescription"
-            label="Description"
-            sortable={false}
+          <FunctionField
+            render={(rec) => (rec.itemDescription ? rec.itemDescription : "-")}
             style={{
               wordWrap: "anywhere",
               width: "fit-content",
               textWrap: "pretty",
             }}
+            label="Description"
+            sortable={false}
           />
           <FunctionField
-            render={(rec) => {
-              return rec.user.firstName + " " + rec.user.lastName;
-            }}
+            render={(rec) => rec.user?.firstName + " " + rec.user?.lastName}
             label="Owner"
           />
         </TabbedShowLayout.Tab>
@@ -142,7 +171,9 @@ export const ShowProduct = () => {
           />
           <FunctionField
             render={(rec) => {
-              return rec.odometer ? rec.odometer + " KM" : "-";
+              return rec.odometer
+                ? `${rec.odometer} ${rec.HRS ? "HRS" : "KMS"}`
+                : "-";
             }}
             label="Odometer"
           />
@@ -172,19 +203,19 @@ export const ShowProduct = () => {
             render={(rec) => {
               return rec.registrationExpires ? rec.registrationExpires : "-";
             }}
-            label="Registration Expires"
-          />
-          <FunctionField
-            render={(rec) => {
-              return rec.registrationExpires ? rec.registrationExpires : "-";
-            }}
             label="Registration Number"
           />
           <FunctionField
             render={(rec) => {
-              return rec.delivery ? rec.delivery : "-";
+              return rec.delivery == "SELLER_ORGANISED"
+                ? "Seller Organized"
+                : "Buyer Organized";
             }}
             label="Delivery Type"
+          />
+          <FunctionField
+            render={(rec) => (rec.rating ? rec.rating : "-")}
+            label="Vehicle rating"
           />
           <Typography variant="h4">Engine Details</Typography>
           <FunctionField

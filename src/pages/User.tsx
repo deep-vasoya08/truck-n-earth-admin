@@ -1,8 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import {
   Avatar,
-  Box,
   Breadcrumbs,
   Link,
   Paper,
@@ -11,7 +9,6 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import {
@@ -31,7 +28,6 @@ import {
   useRecordContext,
   useRefresh,
 } from "react-admin";
-import { useNavigate } from "react-router-dom";
 import "./UserShow.css"; // Import your CSS file
 
 const UserListActions = () => (
@@ -76,50 +72,29 @@ const ShowUserActions = () => (
 );
 
 export const ShowUser = () => {
-  const navigate = useNavigate();
-
-  const handleGoBack = () => {
-    navigate(-1);
-  };
   return (
-    <Show actions={<ShowUserActions />}>
+    <Show actions={<ShowUserActions />} title="User">
       <Breadcrumbs>
         <Link href="/#/user">Home</Link>
         <Link href="/#/user">Users</Link>
       </Breadcrumbs>
       <SimpleShowLayout>
         <Paper>
-          <Typography variant="h4" gutterBottom>
-            <Box display="flex" alignItems="center">
-              <KeyboardBackspaceIcon
-                onClick={handleGoBack}
-                fontSize="large"
-                style={{ cursor: "pointer" }}
-              />
-              <FunctionField
-                render={(record) => (
-                  <Typography variant="h4" component="span" marginLeft={2}>
-                    {`${record.firstName} ${record.lastName}`}
-                  </Typography>
-                )}
-              />
-            </Box>
-          </Typography>
-
           <TableContainer>
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell>Profile Image</TableCell>
                   <TableCell>
+                    <UserAvatar label="Profile" />
+                  </TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell>Username</TableCell>
+                  <TableCell>
                     <FunctionField
-                      render={(record) => (
-                        <img
-                          className="userImage"
-                          src={record.profilePhoto}
-                          alt="Profile Image"
-                        ></img>
-                      )}
+                      render={(rec) => `${rec.firstName} ${rec.lastName}`}
                     />
                   </TableCell>
                 </TableRow>

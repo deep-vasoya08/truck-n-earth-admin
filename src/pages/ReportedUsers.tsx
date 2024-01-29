@@ -30,7 +30,13 @@ export const ReportedUsers = () => {
           sortable={false}
           label="Reason"
         />
-        <DateField sortable={false} label="Reported On" source="reportedAt" />
+        <DateField
+          sortable={false}
+          label="Reported On"
+          source="reportedAt"
+          locales="en-GB"
+          options={{ year: "numeric", month: "short", day: "numeric" }}
+        />
       </DatagridConfigurable>
     </List>
   );

@@ -2,10 +2,8 @@ import {
   DatagridConfigurable,
   DateField,
   ExportButton,
-  FilterButton,
   FunctionField,
   List,
-  SelectColumnsButton,
   TextField,
   TextInput,
   TopToolbar,
@@ -13,8 +11,6 @@ import {
 
 const ListActions = () => (
   <TopToolbar>
-    <FilterButton />
-    <SelectColumnsButton />
     <ExportButton />
   </TopToolbar>
 );
@@ -39,7 +35,13 @@ export const ContactHelpList = () => {
           label="Phone Number"
         />
         <TextField source="message" sortable={false} />
-        <DateField source="createdAt" label="Raised Date" sortable={false} />
+        <DateField
+          source="createdAt"
+          label="Raised Date"
+          sortable={false}
+          locales="en-GB"
+          options={{ year: "numeric", month: "short", day: "numeric" }}
+        />
       </DatagridConfigurable>
     </List>
   );

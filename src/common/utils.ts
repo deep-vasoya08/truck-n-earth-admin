@@ -58,7 +58,7 @@ export const customProvider = (auth) => ({
     let url = `${BASE_URL}/${resource}/${params.id}`;
 
     if (resource === "product") {
-      url = `${BASE_URL}/item/${params.id}`;
+      url = `${BASE_URL}/admin/item/${params.id}`;
     }
 
     if (resource === "purchase") {
