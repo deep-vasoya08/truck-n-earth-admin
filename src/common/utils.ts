@@ -30,12 +30,16 @@ export const customProvider = (auth) => ({
       url = "https://trucknearthsales.com.au/api/getData";
     }
 
-    if (resource === "product") {
+    if (resource === "approved-product") {
       url = `${BASE_URL}/admin/list/items?${query}`;
     }
 
-    if (resource === "contact help") {
+    if (resource === "contact-help") {
       url = `${BASE_URL}/contact-help?${query}`;
+    }
+
+    if (resource == "pending-for-approval") {
+      url = `${BASE_URL}/admin/inactive/items?${query}`;
     }
 
     const resp = await http(url, {
@@ -57,7 +61,7 @@ export const customProvider = (auth) => ({
   getOne: async (resource: string, params: GetOneParams) => {
     let url = `${BASE_URL}/${resource}/${params.id}`;
 
-    if (resource === "product") {
+    if (resource === "approved-product") {
       url = `${BASE_URL}/admin/item/${params.id}`;
     }
 
@@ -67,6 +71,10 @@ export const customProvider = (auth) => ({
 
     if (resource === "user") {
       url = `${BASE_URL}/admin/user/${params.id}`;
+    }
+
+    if (resource == "pending-for-approval") {
+      url = `${BASE_URL}/admin/inactive/item/${params.id}`;
     }
 
     const token = await auth.getJWTToken();
@@ -92,7 +100,7 @@ export const customProvider = (auth) => ({
       throw new Error("No data provided");
     }
 
-    if (resource === "product") {
+    if (resource === "approved-product") {
       url = `${BASE_URL}/item`;
     }
 

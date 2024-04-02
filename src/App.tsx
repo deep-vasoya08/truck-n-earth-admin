@@ -7,16 +7,17 @@ import ReportIcon from "@mui/icons-material/Report";
 import RestoreIcon from "@mui/icons-material/Restore";
 
 // Themes
+import { blue } from "@mui/material/colors";
 import indigo from "@mui/material/colors/indigo";
 import red from "@mui/material/colors/red";
 import { Admin, defaultTheme } from "react-admin";
-import { blue } from "@mui/material/colors";
 
 import { Resource } from "react-admin";
 import { FirebaseAuthProvider } from "react-admin-firebase";
 import { customProvider } from "./common/utils";
 import { firebaseConfig } from "./constants/firebaseConfig";
 import { ContactHelpList } from "./pages/ContactHelp";
+import { InActiveItems, ShowInActiveProduct } from "./pages/InActiveItems";
 import { Product, ShowProduct } from "./pages/Item";
 import { PurchaseHistory, ShowPurchaseHistory } from "./pages/PurchaseHistory";
 import { ReportedUsers } from "./pages/ReportedUsers";
@@ -95,9 +96,15 @@ export const App = () => {
         icon={() => <CategoryIcon style={{ color: "#2196f3" }} />}
       /> */}
       <Resource
-        name="product"
+        name="approved-product"
         list={Product}
         show={ShowProduct}
+        icon={() => <FireTruckIcon style={{ color: "#2196f3" }} />}
+      />
+      <Resource
+        name="pending-for-approval"
+        list={InActiveItems}
+        show={ShowInActiveProduct}
         icon={() => <FireTruckIcon style={{ color: "#2196f3" }} />}
       />
       <Resource

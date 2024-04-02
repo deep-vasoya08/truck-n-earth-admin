@@ -137,7 +137,7 @@ export const ShowPurchaseHistory = () => {
           <Button>
             <LinkDOM
               style={{ textDecoration: "none" }}
-              to={`/product/${itemId}/show`}
+              to={`/approved-product/${itemId}/show`}
             >
               Go to Listing
             </LinkDOM>
@@ -159,6 +159,8 @@ export const ShowPurchaseHistory = () => {
             }}
             label="Mobile"
           />
+          <TextField source="sellerAccId" label="Seller Account ID" />
+          <TextField source="sellerCustomerId" label="Seller Customer ID" />
           <Button>
             <LinkDOM
               style={{ textDecoration: "none" }}

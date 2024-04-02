@@ -18,9 +18,8 @@ npm run dev
 
 ## Production
 
-Build the application in production mode by running:
+Build the application in approved-production mode by running:
 
 ```sh
 npm run build
 ```
-

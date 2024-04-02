@@ -2,19 +2,20 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   Avatar,
   Breadcrumbs,
+  Button,
   Dialog,
   DialogContent,
   Divider,
   ImageList,
   Typography,
 } from "@mui/material";
-import Link from "@mui/material/Link";
 import axios from "axios";
+
+import Link from "@mui/material/Link";
 import React, { useState } from "react";
 import {
-  Button,
   Confirm,
-  Datagrid,
+  DatagridConfigurable,
   DateField,
   ExportButton,
   FilterButton,
@@ -31,7 +32,6 @@ import {
   useRedirect,
   useRefresh,
 } from "react-admin";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Link as LinkDOM } from "react-router-dom";
 import { authProvider } from "../App";
 import * as envs from "../common/envs";
@@ -47,7 +47,7 @@ const itemListFilters = [
   <TextInput key="item-filter" label="Global Search" source="globalSearch" />,
 ];
 
-export const Product = () => {
+export const InActiveItems = () => {
   return (
     <List
       disableSyncWithLocation
@@ -55,7 +55,7 @@ export const Product = () => {
       filters={itemListFilters}
       sort={{ field: "createdAt", order: "DESC" }}
     >
-      <Datagrid bulkActionButtons={false}>
+      <DatagridConfigurable bulkActionButtons={false}>
         <FunctionField
           render={(rec) => {
             return "#" + rec.listingNumber;
@@ -72,14 +72,7 @@ export const Product = () => {
         />
         <DateField
           source="createdAt"
-          label="Listed On"
-          sortable={false}
-          locales="en-GB"
-          options={{ year: "numeric", month: "short", day: "numeric" }}
-        />
-        <DateField
-          source="expiresAt"
-          label="Expires On"
+          label="Requested On"
           sortable={false}
           locales="en-GB"
           options={{ year: "numeric", month: "short", day: "numeric" }}
@@ -88,14 +81,10 @@ export const Product = () => {
           render={(rec) => "$" + rec.askingPrice}
           label="Listing Price"
         />
-        <FunctionField
-          render={(rec) => "$" + rec.listingFees}
-          label="Listing Fees"
-        />
         <TextField source="owner" label="Owner" />
-        <DisableItem label="Action" />
+        <ActionItem label="Action" />
         <GotoItem label="View" />
-      </Datagrid>
+      </DatagridConfigurable>
     </List>
   );
 };
@@ -106,13 +95,14 @@ const ShowProductActions = () => (
   </TopToolbar>
 );
 
-export const ShowProduct = () => {
+export const ShowInActiveProduct = () => {
   const [userId, setUserId] = useState(null);
+
   return (
     <Show actions={<ShowProductActions />} title="Product">
       <Breadcrumbs>
         <Link href="/#/user">Home</Link>
-        <Link href="/#/approved-product">Products</Link>
+        <Link href="/#/pending-for-approval">Products</Link>
       </Breadcrumbs>
       <TabbedShowLayout divider={<Divider flexItem />}>
         <TabbedShowLayout.Tab label="summary">
@@ -124,18 +114,7 @@ export const ShowProduct = () => {
           />
           <TextField source="itemName" label="Name" />
           <TextField source="address" label="Address" sortable={false} />
-          <FunctionField
-            render={(rec) => {
-              return "$" + rec.askingPrice;
-            }}
-            label="Listing Price"
-          />
-          <FunctionField
-            render={(rec) => {
-              return "$" + rec.listingFees == null ? 0 : rec.listingFees;
-            }}
-            label="Listing Fees"
-          />
+          <TextField source="askingPrice" label="Listing Price" />
           <DateField
             source="createdAt"
             label="Listed On"
@@ -176,6 +155,12 @@ export const ShowProduct = () => {
           <TextField source="make" />
           <TextField source="model" />
           <TextField source="makeYear" />
+          <FunctionField
+            render={(rec) => {
+              return "$" + rec.askingPrice;
+            }}
+            label="Price"
+          />
           <FunctionField
             render={(rec) => (rec.VIN ? rec.VIN : "-")}
             label="VIN"
@@ -246,12 +231,12 @@ export const ShowProduct = () => {
             label="Horse Power"
           />
           <FunctionField
-            render={(rec) => (rec.enginePower ? rec.enginePower : "-")}
-            label="Engine Power"
-          />
-          <FunctionField
             render={(rec) => (rec.engineSize ? rec.engineSize : "-")}
             label="Engine Size"
+          />
+          <FunctionField
+            render={(rec) => (rec.enginePower ? rec.enginePower : "-")}
+            label="Engine Power"
           />
           <FunctionField
             render={(rec) =>
@@ -307,6 +292,121 @@ export const ShowProduct = () => {
         </TabbedShowLayout.Tab>
       </TabbedShowLayout>
     </Show>
+  );
+};
+
+type ApproveItemProps = {
+  label: string;
+};
+
+const ActionItem: React.FC<ApproveItemProps> = () => {
+  const [openApprove, setOpenApprove] = useState(false);
+  const [openReject, setOpenReject] = useState(false);
+  const record = useRecordContext();
+  const notify = useNotify();
+  const refresh = useRefresh();
+
+  const handleClickApprove = async () => {
+    const url = envs.BASE_URL;
+    const token = await authProvider.getJWTToken();
+    const response = await axios({
+      url: `${url}/admin/approve/item/${record.id}`,
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.status === 200) {
+      notify("Item approved successfully", { type: "success" });
+      setOpenApprove(false);
+      refresh();
+    } else {
+      notify(response.statusText, { type: "error" });
+    }
+  };
+
+  const handleClickReject = async () => {
+    const url = envs.BASE_URL;
+    const token = await authProvider.getJWTToken();
+    const response = await axios({
+      url: `${url}/admin/item/${record.id}`,
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.status === 200) {
+      notify("Add deleted successfully", { type: "success" });
+      setOpenReject(false);
+      refresh();
+    } else {
+      notify(response.statusText, { type: "error" });
+    }
+  };
+
+  return (
+    <>
+      <div style={{ display: "flex" }}>
+        <Button
+          sx={{ padding: "5px", margin: "5px" }}
+          onClick={() => setOpenApprove(true)}
+          variant="contained"
+          color="success"
+        >
+          Approve
+        </Button>
+        <Button
+          sx={{ padding: "5px", margin: "5px" }}
+          onClick={() => setOpenReject(true)}
+          variant="contained"
+          color="error"
+        >
+          Reject
+        </Button>
+      </div>
+      <Confirm
+        isOpen={openApprove}
+        title="Approve Product Listing"
+        content="Are you sure you want to approve product listing and make it live to the users?"
+        CancelIcon={CloseIcon}
+        onConfirm={() => handleClickApprove()}
+        onClose={() => {
+          setOpenApprove(false);
+        }}
+        confirm="Confirm"
+      />
+      <Confirm
+        isOpen={openReject}
+        title="Reject Product Listing?"
+        content="Are you sure you want to reject the product listing? This action cannot be undone. The product owner will be notified via email about this rejection."
+        CancelIcon={CloseIcon}
+        onConfirm={() => handleClickReject()}
+        onClose={() => {
+          setOpenReject(false);
+        }}
+        confirm="Confirm"
+      />
+    </>
+  );
+};
+
+type GotoItemProps = {
+  label: string;
+};
+
+const GotoItem: React.FC<GotoItemProps> = () => {
+  const record = useRecordContext();
+  const redirect = useRedirect();
+  return (
+    <Button
+      onClick={() => {
+        redirect(`/pending-for-approval/${record.id}/show`);
+      }}
+      variant="contained"
+      color="primary"
+    >
+      View
+    </Button>
   );
 };
 
@@ -368,86 +468,6 @@ const ImageViewer = () => {
           />
         </DialogContent>
       </Dialog>
-    </>
-  );
-};
-
-type GotoItemProps = {
-  label: string;
-};
-
-const GotoItem: React.FC<GotoItemProps> = () => {
-  const record = useRecordContext();
-  const redirect = useRedirect();
-  return (
-    <Button
-      onClick={() => {
-        redirect(`/approved-product/${record.id}/show`);
-      }}
-      variant="contained"
-      color="primary"
-    >
-      View
-    </Button>
-  );
-};
-
-type DisableItemProps = {
-  label: string;
-};
-
-const DisableItem: React.FC<DisableItemProps> = () => {
-  const [open, setOpen] = useState(false);
-  const record = useRecordContext();
-  const notify = useNotify();
-  const refresh = useRefresh();
-
-  const handleClick = async () => {
-    const url = envs.BASE_URL;
-    const token = await authProvider.getJWTToken();
-    try {
-      const response = await axios({
-        url: `${url}/admin/item/${record.id}`,
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status == 200) {
-        notify("Item Deleted successfully", { type: "success" });
-        setOpen(false);
-        refresh();
-      } else {
-        notify(response.data.message, { type: "error" });
-        setOpen(false);
-      }
-    } catch (error) {
-      setOpen(false);
-      notify(error.response.data.message, { type: "error" });
-    }
-  };
-
-  return (
-    <>
-      <Button
-        sx={{ padding: "5px" }}
-        onClick={() => setOpen(true)}
-        variant="contained"
-        color="error"
-      >
-        <span style={{ fontSize: "small", marginRight: "-8px" }}>Delete</span>
-      </Button>
-      <Confirm
-        isOpen={open}
-        title="Delete the product?"
-        content="Are you sure you want to delete this listed product? This action cannot be undone. The product owner will be notified via email about this rejection."
-        CancelIcon={CloseIcon}
-        onConfirm={() => handleClick()}
-        onClose={() => {
-          setOpen(false);
-        }}
-        confirm="Confirm"
-      />
     </>
   );
 };
