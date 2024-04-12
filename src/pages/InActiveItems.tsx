@@ -336,7 +336,7 @@ const ActionItem: React.FC<ApproveItemProps> = () => {
       },
     });
     if (response.status === 200) {
-      notify("Add deleted successfully", { type: "success" });
+      notify("Item deleted successfully", { type: "success" });
       setOpenReject(false);
       refresh();
     } else {
@@ -361,7 +361,7 @@ const ActionItem: React.FC<ApproveItemProps> = () => {
           variant="contained"
           color="error"
         >
-          Reject
+          Delete
         </Button>
       </div>
       <Confirm
@@ -377,8 +377,8 @@ const ActionItem: React.FC<ApproveItemProps> = () => {
       />
       <Confirm
         isOpen={openReject}
-        title="Reject Product Listing?"
-        content="Are you sure you want to reject the product listing? This action cannot be undone. The product owner will be notified via email about this rejection."
+        title="Delete Product Listing?"
+        content="Are you sure you want to delete the product listing? This action cannot be undone. The product owner will be notified via email about this deletion."
         CancelIcon={CloseIcon}
         onConfirm={() => handleClickReject()}
         onClose={() => {

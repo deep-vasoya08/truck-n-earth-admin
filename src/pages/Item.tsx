@@ -414,7 +414,7 @@ const DisableItem: React.FC<DisableItemProps> = () => {
         },
       });
       if (response.status == 200) {
-        notify("Item Deleted successfully", { type: "success" });
+        notify("Item deleted successfully", { type: "success" });
         setOpen(false);
         refresh();
       } else {
