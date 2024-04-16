@@ -6,6 +6,7 @@ import {
   DialogContent,
   Divider,
   ImageList,
+  ImageListItem,
   Typography,
 } from "@mui/material";
 import Link from "@mui/material/Link";
@@ -329,8 +330,6 @@ const ImageViewer = () => {
 
   const handleImageClick = (img: string) => {
     setSelectedImage(img);
-    console.log(selectedImage);
-
     setOpen(true);
   };
 
@@ -339,26 +338,30 @@ const ImageViewer = () => {
   };
 
   return (
-    <>
-      <ImageList cols={4} gap={8} sx={{ overflow: "hidden" }}>
-        {record.images.map((img) => (
-          <>
-            <img
-              style={{
-                height: "auto",
-                width: "100%",
-                margin: "2px",
-                border: "2px solid black",
-                cursor: "pointer",
-              }}
-              src={img.image_url}
-              alt="image"
-              key={img.id}
-              onClick={() => handleImageClick(img.image_url)}
-            />
-          </>
-        ))}
-      </ImageList>
+    <ImageList
+      cols={4}
+      sx={{
+        overflow: "hidden",
+      }}
+    >
+      {record.images.map((img: { id: number; image_url: string }) => (
+        <ImageListItem key={img.image_url}>
+          <img
+            style={{
+              height: "auto",
+              width: "100%",
+              margin: "2px",
+              border: "2px solid black",
+              cursor: "pointer",
+            }}
+            srcSet={img.image_url}
+            src={img.image_url}
+            alt="image"
+            loading="lazy"
+            onClick={() => handleImageClick(img.image_url)}
+          />
+        </ImageListItem>
+      ))}
       <Dialog open={open} onClose={handleClose}>
         <DialogContent sx={{ padding: "0px" }}>
           <img
@@ -368,7 +371,7 @@ const ImageViewer = () => {
           />
         </DialogContent>
       </Dialog>
-    </>
+    </ImageList>
   );
 };
 

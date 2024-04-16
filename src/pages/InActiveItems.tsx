@@ -7,6 +7,7 @@ import {
   DialogContent,
   Divider,
   ImageList,
+  ImageListItem,
   Typography,
 } from "@mui/material";
 import axios from "axios";
@@ -440,9 +441,9 @@ const ImageViewer = () => {
 
   return (
     <>
-      <ImageList cols={4} gap={8} sx={{ overflow: "hidden" }}>
-        {record.images.map((img) => (
-          <>
+      <ImageList cols={4} sx={{ overflow: "hidden" }}>
+        {record.images.map((img: { id: number; image_url: string }) => (
+          <ImageListItem key={img.image_url}>
             <img
               style={{
                 height: "auto",
@@ -453,10 +454,10 @@ const ImageViewer = () => {
               }}
               src={img.image_url}
               alt="image"
-              key={img.id}
+              loading="lazy"
               onClick={() => handleImageClick(img.image_url)}
             />
-          </>
+          </ImageListItem>
         ))}
       </ImageList>
       <Dialog open={open} onClose={handleClose}>
